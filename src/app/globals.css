@@ -1,0 +1,181 @@
+@import "tailwindcss";
+
+/* ============================================================
+   EcoBin Design System
+   Apple-minimal · Smart-city · Futuristic AI/IoT dashboard
+   Dark-first. Deep navy canvas, emerald + cyan accents, glass.
+   ============================================================ */
+
+@theme {
+  /* Canvas / surfaces */
+  --color-canvas: #070b14;
+  --color-canvas-2: #0a1120;
+  --color-surface: #0e1626;
+  --color-elevated: #131d31;
+
+  /* Borders & lines */
+  --color-line: #1c2942;
+  --color-line-soft: #16213699;
+
+  /* Text */
+  --color-ink: #f3f6fb;
+  --color-ink-muted: #94a3b8;
+  --color-ink-faint: #5b6b85;
+
+  /* Brand — emerald (primary) + cyan (tech accent) */
+  --color-brand: #10b981;
+  --color-brand-bright: #34d399;
+  --color-brand-dim: #0b3b2e;
+  --color-accent: #22d3ee;
+  --color-accent-dim: #0c3a44;
+
+  /* Semantic status */
+  --color-ok: #34d399;
+  --color-warn: #fbbf24;
+  --color-danger: #f87171;
+  --color-info: #60a5fa;
+
+  /* Typography */
+  --font-sans: var(--font-geist-sans), -apple-system, BlinkMacSystemFont,
+    "SF Pro Text", system-ui, sans-serif;
+  --font-mono: var(--font-geist-mono), "SF Mono", ui-monospace, monospace;
+
+  /* Radii — soft, Apple-like */
+  --radius-xl: 1.25rem;
+  --radius-2xl: 1.75rem;
+
+  /* Easing */
+  --ease-out-soft: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@layer base {
+  html {
+    color-scheme: dark;
+  }
+
+  body {
+    background-color: var(--color-canvas);
+    color: var(--color-ink);
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  /* Ambient gradient mesh — the "smart city" glow */
+  body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    pointer-events: none;
+    background:
+      radial-gradient(60rem 40rem at 80% -10%, #10b98118, transparent 60%),
+      radial-gradient(50rem 38rem at 0% 10%, #22d3ee14, transparent 55%),
+      radial-gradient(40rem 40rem at 50% 120%, #6366f114, transparent 60%);
+  }
+
+  ::selection {
+    background: var(--color-brand);
+    color: #04130d;
+  }
+
+  /* Slim, modern scrollbar */
+  ::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: var(--color-line);
+    border-radius: 999px;
+    border: 2px solid var(--color-canvas);
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: #2a3a5c;
+  }
+}
+
+@layer components {
+  /* Glassmorphism card — the signature surface */
+  .glass {
+    background: linear-gradient(
+      180deg,
+      color-mix(in oklab, var(--color-surface) 86%, transparent),
+      color-mix(in oklab, var(--color-canvas-2) 92%, transparent)
+    );
+    border: 1px solid var(--color-line);
+    backdrop-filter: blur(18px) saturate(140%);
+    -webkit-backdrop-filter: blur(18px) saturate(140%);
+    box-shadow:
+      0 1px 0 0 #ffffff0a inset,
+      0 24px 60px -28px #00000080;
+  }
+
+  .glass-hover {
+    transition:
+      transform 0.4s var(--ease-out-soft),
+      border-color 0.4s var(--ease-out-soft),
+      box-shadow 0.4s var(--ease-out-soft);
+  }
+  .glass-hover:hover {
+    transform: translateY(-3px);
+    border-color: color-mix(in oklab, var(--color-brand) 45%, var(--color-line));
+    box-shadow:
+      0 1px 0 0 #ffffff12 inset,
+      0 30px 70px -30px #0a3b2e99;
+  }
+
+  /* Gradient text for hero numbers / brand */
+  .text-gradient {
+    background: linear-gradient(
+      120deg,
+      var(--color-ink) 0%,
+      var(--color-brand-bright) 60%,
+      var(--color-accent) 100%
+    );
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+
+  /* Soft status pill */
+  .pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.25rem 0.7rem;
+    border-radius: 999px;
+    font-size: 0.75rem;
+    font-weight: 500;
+    letter-spacing: 0.01em;
+  }
+}
+
+/* Tasteful entrance animation utilities */
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+.animate-rise {
+  animation: rise 0.7s var(--ease-out-soft) both;
+}
+
+@keyframes pulse-ring {
+  0% {
+    box-shadow: 0 0 0 0 #10b98155;
+  }
+  70% {
+    box-shadow: 0 0 0 12px #10b98100;
+  }
+  100% {
+    box-shadow: 0 0 0 0 #10b98100;
+  }
+}
+.animate-pulse-ring {
+  animation: pulse-ring 2.4s var(--ease-out-soft) infinite;
+}

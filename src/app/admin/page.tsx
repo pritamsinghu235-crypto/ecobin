@@ -21,12 +21,12 @@ export default async function AdminOverviewPage() {
   ]);
 
   const cards = [
-    { label: "Total Deposits", value: formatCompact(stats?.total_deposits ?? 0), icon: Boxes, accent: "brand" as const },
-    { label: "Bottles Collected", value: formatCompact(stats?.total_bottles ?? 0), icon: Recycle, accent: "accent" as const },
-    { label: "Weight Collected", value: ((stats?.total_weight_g ?? 0) / 1000).toFixed(1), unit: "kg", icon: Scale, accent: "info" as const },
-    { label: "Citizens", value: formatCompact(stats?.total_users ?? 0), icon: Users, accent: "warn" as const },
+    { label: "Total Deposits", value: stats?.total_deposits ?? 0, format: "compact" as const, icon: Boxes, accent: "brand" as const },
+    { label: "Bottles Collected", value: stats?.total_bottles ?? 0, format: "compact" as const, icon: Recycle, accent: "accent" as const },
+    { label: "Weight Collected", value: (stats?.total_weight_g ?? 0) / 1000, format: "fixed1" as const, unit: "kg", icon: Scale, accent: "info" as const },
+    { label: "Citizens", value: stats?.total_users ?? 0, format: "compact" as const, icon: Users, accent: "warn" as const },
     { label: "Machines", value: `${stats?.active_machines ?? 0}/${stats?.total_machines ?? 0}`, icon: Cpu, accent: "brand" as const },
-    { label: "Avg Fill Level", value: `${stats?.avg_fill ?? 0}`, unit: "%", icon: Gauge, accent: "accent" as const },
+    { label: "Avg Fill Level", value: Number(stats?.avg_fill ?? 0), unit: "%", icon: Gauge, accent: "accent" as const },
   ];
 
   const donutData = split.map((s) => ({ type: s.plastic_type, count: s.count, weight: 0 }));

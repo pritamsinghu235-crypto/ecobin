@@ -102,14 +102,12 @@ export type LeaderboardRow = {
   full_name: string;
   total_bottles: number;
   impact_score: number;
-  coins_balance: number;
 };
 
 export type MyRank = {
   rank: number;
   total_bottles: number;
   impact_score: number;
-  coins_balance: number;
 };
 
 export type AppNotification = {

@@ -2,9 +2,29 @@
 
 import { useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
-import { Check, Loader2 } from "lucide-react";
+import { AnimatePresence, motion } from "motion/react";
+import { Check, Coins, Loader2 } from "lucide-react";
 import { redeemReward } from "@/app/(app)/actions";
 import { cn } from "@/lib/utils";
+
+function CoinBurst() {
+  const coins = [-28, -10, 10, 28];
+  return (
+    <div className="pointer-events-none absolute inset-x-0 top-0 flex justify-center">
+      {coins.map((x, i) => (
+        <motion.span
+          key={i}
+          initial={{ opacity: 0, y: 0, x }}
+          animate={{ opacity: [0, 1, 0], y: -34, scale: [0.6, 1, 0.9] }}
+          transition={{ duration: 0.8, delay: i * 0.05, ease: "easeOut" }}
+          className="absolute text-warn"
+        >
+          <Coins className="size-4" />
+        </motion.span>
+      ))}
+    </div>
+  );
+}
 
 export function RedeemButton({
   rewardId,
@@ -38,10 +58,12 @@ export function RedeemButton({
   const disabled = pending || !affordable || !inStock;
 
   return (
-    <div className="space-y-1.5">
-      <button
+    <div className="relative space-y-1.5">
+      <AnimatePresence>{done && <CoinBurst />}</AnimatePresence>
+      <motion.button
         onClick={onClick}
         disabled={disabled}
+        whileTap={{ scale: disabled ? 1 : 0.97 }}
         className={cn(
           "flex h-10 w-full items-center justify-center gap-2 rounded-full text-sm font-medium transition-all duration-300",
           done
@@ -64,7 +86,7 @@ export function RedeemButton({
         ) : (
           "Not enough coins"
         )}
-      </button>
+      </motion.button>
       {error && <p className="text-center text-xs text-danger">{error}</p>}
     </div>
   );

@@ -8,6 +8,7 @@ import { RecentDeposits } from "@/components/dashboard/recent-deposits";
 import { RecycleButton } from "@/components/dashboard/recycle-button";
 import { NetworkPanel } from "@/components/dashboard/network-panel";
 import { Achievements } from "@/components/dashboard/achievements";
+import { BinVisualization } from "@/components/3d/BinVisualization";
 import {
   getProfile,
   getRecentDeposits,
@@ -16,7 +17,6 @@ import {
   getBadgeProgress,
 } from "@/lib/data";
 import { dailyActivity, plasticBreakdown } from "@/lib/aggregate";
-import { formatCompact } from "@/lib/utils";
 
 export default async function DashboardPage() {
   const [profile, recent, chartDeposits, machines, badges] = await Promise.all([
@@ -38,10 +38,10 @@ export default async function DashboardPage() {
   const breakdown = plasticBreakdown(chartDeposits);
 
   const stats = [
-    { label: "Bottles Recycled", value: formatCompact(bottles), icon: Recycle, accent: "brand" as const },
-    { label: "Weight Collected", value: weightKg.toFixed(1), unit: "kg", icon: Scale, accent: "accent" as const },
-    { label: "Coins Earned", value: formatCompact(coins), icon: Coins, accent: "warn" as const },
-    { label: "Impact Score", value: formatCompact(impact), icon: Leaf, accent: "info" as const },
+    { label: "Bottles Recycled", value: bottles, format: "compact" as const, icon: Recycle, accent: "brand" as const },
+    { label: "Weight Collected", value: weightKg, format: "fixed1" as const, unit: "kg", icon: Scale, accent: "accent" as const },
+    { label: "Coins Earned", value: coins, format: "compact" as const, icon: Coins, accent: "warn" as const },
+    { label: "Impact Score", value: impact, format: "compact" as const, icon: Leaf, accent: "info" as const },
   ];
 
   return (
@@ -84,11 +84,15 @@ export default async function DashboardPage() {
         </div>
 
         <div className="grid grid-cols-1 gap-4 lg:grid-cols-3">
-          <Card className="animate-rise h-96 lg:col-span-2" style={{ animationDelay: "480ms" }}>
+          <Card glow className="animate-rise h-96 overflow-hidden" style={{ animationDelay: "480ms" }}>
+            <BinVisualization initial={machines} />
+          </Card>
+
+          <Card className="animate-rise h-96" style={{ animationDelay: "560ms" }}>
             <NetworkPanel initial={machines} />
           </Card>
 
-          <Card className="animate-rise" style={{ animationDelay: "560ms" }}>
+          <Card className="animate-rise h-96" style={{ animationDelay: "640ms" }}>
             <Achievements badges={badges} />
           </Card>
         </div>

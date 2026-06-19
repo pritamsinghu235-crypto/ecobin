@@ -4,12 +4,14 @@ import { cn } from "@/lib/utils";
 export function Card({
   className,
   hover = false,
+  glow = false,
   ...props
-}: React.HTMLAttributes<HTMLDivElement> & { hover?: boolean }) {
+}: React.HTMLAttributes<HTMLDivElement> & { hover?: boolean; glow?: boolean }) {
   return (
     <div
       className={cn(
         "glass rounded-2xl",
+        glow && "glass-glow",
         hover && "glass-hover cursor-default",
         className,
       )}

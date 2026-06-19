@@ -1,5 +1,6 @@
 import { type LucideIcon, TrendingUp } from "lucide-react";
 import { Card } from "@/components/ui/card";
+import { AnimatedNumber, type NumberFormat } from "@/components/animations/animated-number";
 import { cn } from "@/lib/utils";
 
 export function StatCard({
@@ -10,14 +11,16 @@ export function StatCard({
   icon: Icon,
   accent = "brand",
   delay = 0,
+  format,
 }: {
   label: string;
-  value: string;
+  value: string | number;
   unit?: string;
   delta?: string;
   icon: LucideIcon;
   accent?: "brand" | "accent" | "info" | "warn";
   delay?: number;
+  format?: NumberFormat;
 }) {
   const accents = {
     brand: "text-brand-bright bg-brand-dim/50",
@@ -32,7 +35,7 @@ export function StatCard({
         <div className="space-y-3">
           <p className="text-sm font-medium text-ink-muted">{label}</p>
           <p className="text-3xl font-semibold tracking-tight">
-            {value}
+            {typeof value === "number" ? <AnimatedNumber value={value} format={format} /> : value}
             {unit && <span className="ml-1 text-base font-normal text-ink-muted">{unit}</span>}
           </p>
           {delta && (

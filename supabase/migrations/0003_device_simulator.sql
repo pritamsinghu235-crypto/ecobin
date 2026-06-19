@@ -17,9 +17,11 @@ create table if not exists private.device_credentials (
 
 revoke all on private.device_credentials from anon, authenticated;
 
--- Seed the simulator fleet credential. Matches DEVICE_INGEST_KEY in .env.local.
+-- Seed the simulator fleet credential. The real key is NOT committed —
+-- replace the placeholder below with your DEVICE_INGEST_KEY (from .env.local)
+-- when first setting up, or register it via 0007 after key rotation.
 insert into private.device_credentials (device_key, label)
-values ('dev_sim_6b391e04afe337e2ac9fa19709355de7bdde', 'sim-fleet')
+values ('<paste DEVICE_INGEST_KEY from .env.local>', 'sim-fleet')
 on conflict (device_key) do nothing;
 
 -- Verify a device key (internal helper).

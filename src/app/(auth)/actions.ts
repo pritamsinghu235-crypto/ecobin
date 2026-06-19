@@ -30,7 +30,10 @@ export async function signup(_prev: AuthState, formData: FormData): Promise<Auth
   const next = safeNext(formData.get("next"));
 
   if (fullName.length < 2) return { error: "Please enter your name." };
-  if (password.length < 6) return { error: "Password must be at least 6 characters." };
+  if (password.length < 8) return { error: "Password must be at least 8 characters." };
+  if (!/[a-zA-Z]/.test(password) || !/[0-9]/.test(password)) {
+    return { error: "Password must include both letters and numbers." };
+  }
 
   const supabase = await createClient();
   const { data, error } = await supabase.auth.signUp({

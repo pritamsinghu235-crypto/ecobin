@@ -1,6 +1,10 @@
 import { NextResponse, type NextRequest } from "next/server";
 import { createIngestClient } from "@/lib/supabase/ingest";
 import { PLASTIC_TYPES, type PlasticType } from "@/lib/types";
+import { rateLimit, clientIp } from "@/lib/rate-limit";
+
+const INGEST_LIMIT = 600;
+const INGEST_WINDOW_MS = 60_000;
 
 /**
  * POST /api/ingest/deposit
@@ -10,6 +14,14 @@ import { PLASTIC_TYPES, type PlasticType } from "@/lib/types";
  * Represents a bottle dropped at a machine (city-wide usage, no user).
  */
 export async function POST(req: NextRequest) {
+  const limit = rateLimit(`deposit:${clientIp(req)}`, INGEST_LIMIT, INGEST_WINDOW_MS);
+  if (!limit.allowed) {
+    return NextResponse.json(
+      { error: "rate limit exceeded" },
+      { status: 429, headers: { "Retry-After": String(limit.retryAfter) } },
+    );
+  }
+
   const deviceKey = req.headers.get("x-device-key") ?? "";
   if (!deviceKey) {
     return NextResponse.json({ error: "missing device key" }, { status: 401 });

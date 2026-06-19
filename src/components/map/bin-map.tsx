@@ -10,22 +10,21 @@ export type BinMapHandle = {
   flyTo: (lng: number, lat: number, zoom?: number) => void;
 };
 
-function makePin(m: MapMachine, selected: boolean): HTMLDivElement {
-  const el = document.createElement("div");
+/** Update an existing pin's appearance in place (no re-creation). */
+function stylePin(el: HTMLDivElement, m: MapMachine, selected: boolean) {
   const color = STATUS_COLOR[m.status] ?? "#5b6b85";
   const size = selected ? 22 : 15;
-  el.style.cssText = [
-    `width:${size}px`,
-    `height:${size}px`,
-    "border-radius:50%",
-    `background:${color}`,
-    "border:2px solid #07101f",
-    `box-shadow:0 0 0 ${selected ? 4 : 2}px ${color}40, 0 4px 12px #0009`,
-    "cursor:pointer",
-    "transition:width .2s ease,height .2s ease,box-shadow .2s ease",
-  ].join(";");
+  const live = m.status === "active";
+  el.style.width = `${size}px`;
+  el.style.height = `${size}px`;
+  el.style.borderRadius = "50%";
+  el.style.background = color;
+  el.style.border = "2px solid #07101f";
+  el.style.boxShadow = `0 0 0 ${selected ? 4 : 2}px ${color}40, 0 0 ${live ? 12 : 6}px ${color}${live ? "aa" : "55"}, 0 4px 12px #0009`;
+  el.style.cursor = "pointer";
+  el.style.transition =
+    "width .25s ease, height .25s ease, box-shadow .3s ease, background .3s ease";
   el.title = `${m.name} · ${m.fill_level}%`;
-  return el;
 }
 
 export const BinMap = forwardRef<BinMapHandle, {
@@ -52,6 +51,7 @@ export const BinMap = forwardRef<BinMapHandle, {
   // Create the map once (library imported lazily to stay SSR-safe).
   useEffect(() => {
     let cancelled = false;
+    const markers = markersRef.current; // stable Map instance, safe for cleanup
     (async () => {
       const maplibregl = await import("maplibre-gl");
       if (cancelled || !containerRef.current) return;
@@ -73,30 +73,46 @@ export const BinMap = forwardRef<BinMapHandle, {
 
     return () => {
       cancelled = true;
-      markersRef.current.forEach((mk) => mk.remove());
-      markersRef.current.clear();
+      markers.forEach((mk) => mk.remove());
+      markers.clear();
       mapRef.current?.remove();
       mapRef.current = null;
     };
   }, []);
 
-  // (Re)draw markers when data or selection changes.
+  // Diff markers when data/selection changes — update in place so polling
+  // never re-creates pins (which would replay the pop-in animation).
   useEffect(() => {
     const map = mapRef.current;
     const maplibregl = mlRef.current;
     if (!ready || !map || !maplibregl) return;
 
-    markersRef.current.forEach((mk) => mk.remove());
-    markersRef.current.clear();
-
+    const seen = new Set<string>();
     for (const m of machines) {
-      const el = makePin(m, m.id === selectedId);
-      el.addEventListener("click", (e) => {
-        e.stopPropagation();
-        onSelectRef.current(m);
-      });
-      const marker = new maplibregl.Marker({ element: el }).setLngLat([m.lng, m.lat]).addTo(map);
-      markersRef.current.set(m.id, marker);
+      seen.add(m.id);
+      let marker = markersRef.current.get(m.id);
+      if (!marker) {
+        const el = document.createElement("div");
+        el.className = "ecobin-pin"; // pop-in animation, plays once
+        const machine = m; // capture stable id + coords for the click handler
+        el.addEventListener("click", (e) => {
+          e.stopPropagation();
+          onSelectRef.current(machine);
+        });
+        marker = new maplibregl.Marker({ element: el }).setLngLat([m.lng, m.lat]).addTo(map);
+        markersRef.current.set(m.id, marker);
+      } else {
+        marker.setLngLat([m.lng, m.lat]);
+      }
+      stylePin(marker.getElement() as HTMLDivElement, m, m.id === selectedId);
+    }
+
+    // Remove pins for machines that disappeared.
+    for (const [id, marker] of markersRef.current) {
+      if (!seen.has(id)) {
+        marker.remove();
+        markersRef.current.delete(id);
+      }
     }
 
     if (!fittedRef.current && machines.length > 0) {

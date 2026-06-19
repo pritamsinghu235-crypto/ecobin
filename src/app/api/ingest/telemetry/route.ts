@@ -1,5 +1,11 @@
 import { NextResponse, type NextRequest } from "next/server";
 import { createIngestClient } from "@/lib/supabase/ingest";
+import { rateLimit, clientIp } from "@/lib/rate-limit";
+
+// Generous enough for the whole simulated fleet (~220 req/min), low
+// enough to stop gross abuse from a single source.
+const INGEST_LIMIT = 600;
+const INGEST_WINDOW_MS = 60_000;
 
 /**
  * POST /api/ingest/telemetry
@@ -7,6 +13,14 @@ import { createIngestClient } from "@/lib/supabase/ingest";
  * Header: x-device-key: <DEVICE_INGEST_KEY>
  */
 export async function POST(req: NextRequest) {
+  const limit = rateLimit(`telemetry:${clientIp(req)}`, INGEST_LIMIT, INGEST_WINDOW_MS);
+  if (!limit.allowed) {
+    return NextResponse.json(
+      { error: "rate limit exceeded" },
+      { status: 429, headers: { "Retry-After": String(limit.retryAfter) } },
+    );
+  }
+
   const deviceKey = req.headers.get("x-device-key") ?? "";
   if (!deviceKey) {
     return NextResponse.json({ error: "missing device key" }, { status: 401 });

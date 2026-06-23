@@ -21,12 +21,15 @@ const CHIPS = [
 
 export function HeroVisual() {
   const ref = useRef<HTMLDivElement>(null);
-  const [mode, setMode] = useState<"fallback" | "3d">("fallback");
+  // off = static SVG (no WebGL / reduced-motion / very low-end);
+  // lite = reduced 3D for mobile & touch; full = desktop 3D.
+  const [mode, setMode] = useState<"off" | "lite" | "full">("off");
   const [visible, setVisible] = useState(true);
 
-  // Capability gate — only upgrade to 3D on capable, motion-friendly desktops.
+  // Capability gate — picks the richest tier the device can sustain at 60fps.
   // Deferred a frame so the upgrade happens after first paint (and off the
-  // effect's synchronous path), keeping the initial render light.
+  // effect's synchronous path), keeping the initial render light. Mobile/touch
+  // no longer disqualifies 3D — it just selects the lighter `lite` tier.
   useEffect(() => {
     const raf = requestAnimationFrame(() => {
       const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -40,8 +43,10 @@ export function HeroVisual() {
       } catch {
         webgl = false;
       }
-      const lowCores = (navigator.hardwareConcurrency ?? 8) <= 2;
-      if (!reduce && !smallOrTouch && webgl && !lowCores) setMode("3d");
+      const cores = navigator.hardwareConcurrency ?? 8;
+      // Hard blockers keep the static SVG; otherwise mobile gets the lite scene.
+      if (reduce || !webgl || cores <= 2) setMode("off");
+      else setMode(smallOrTouch ? "lite" : "full");
     });
     return () => cancelAnimationFrame(raf);
   }, []);
@@ -65,7 +70,11 @@ export function HeroVisual() {
       {/* soft floor glow */}
       <div className="pointer-events-none absolute inset-x-10 bottom-10 h-24 rounded-full bg-brand/20 blur-3xl" />
 
-      {mode === "3d" ? <HeroScene frameloop={visible ? "always" : "never"} /> : <HeroFallback />}
+      {mode === "off" ? (
+        <HeroFallback />
+      ) : (
+        <HeroScene frameloop={visible ? "always" : "never"} quality={mode} />
+      )}
 
       {/* feature callouts floating around the bin (md+ only) */}
       {CHIPS.map((chip, i) => (

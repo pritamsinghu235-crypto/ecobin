@@ -13,7 +13,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "EcoBin — Smart Waste Management",
+  title: "Wastelytix — Turn Waste Into Value",
   description:
     "AI-powered smart collection machines. Deposit plastic bottles, earn coins, and track your environmental impact across the city.",
 };

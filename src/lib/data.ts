@@ -242,6 +242,13 @@ export async function getAllMachines(): Promise<Machine[]> {
   return (data as Machine[]) ?? [];
 }
 
+/** Look up a single machine by its human-readable code (e.g. from a QR scan). */
+export async function getMachineByCode(code: string): Promise<Machine | null> {
+  const supabase = await createClient();
+  const { data } = await supabase.from("machines").select("*").eq("code", code).maybeSingle();
+  return (data as Machine | null) ?? null;
+}
+
 export async function getAllRewards(): Promise<Reward[]> {
   const supabase = await createClient();
   const { data } = await supabase.from("rewards").select("*").order("cost_coins");

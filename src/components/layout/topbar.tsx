@@ -4,7 +4,7 @@ import { Pill } from "@/components/ui/pill";
 
 export function Topbar({ title, action }: { title: string; action?: React.ReactNode }) {
   return (
-    <header className="sticky top-0 z-10 flex items-center gap-4 border-b border-line/70 bg-canvas/70 px-5 py-4 backdrop-blur-xl lg:px-8">
+    <header className="sticky top-0 z-10 flex items-center gap-4 border-b border-line/70 bg-canvas/70 py-4 pl-16 pr-5 backdrop-blur-xl lg:px-8">
       <div>
         <h1 className="text-lg font-semibold tracking-tight">{title}</h1>
       </div>

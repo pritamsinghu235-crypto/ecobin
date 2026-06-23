@@ -1,5 +1,5 @@
 -- ============================================================
--- EcoBin · seed data (run after 0001_init.sql)
+-- Wastelytix · seed data (run after 0001_init.sql)
 -- Smart machines around a sample city + reward catalog.
 -- Coordinates are around central London for the demo map.
 -- ============================================================
@@ -20,6 +20,6 @@ insert into public.rewards (title, description, cost_coins, stock, active) value
   ('Bus Day Pass',         'One-day city transit pass.',             800,  500, true),
   ('Plant a Tree',         'We plant a tree in your name.',          300, null, true),
   ('£5 Grocery Voucher',   'Redeemable at partner stores.',         1000,  300, true),
-  ('Tote Bag',             'Recycled-canvas EcoBin tote.',           400,   80, true),
+  ('Tote Bag',             'Recycled-canvas Wastelytix tote.',       400,   80, true),
   ('Cinema Ticket',        'Standard ticket at partner cinemas.',   1500,  100, true)
 on conflict do nothing;

@@ -1,5 +1,6 @@
 import { redirect } from "next/navigation";
 import { Sidebar } from "@/components/layout/sidebar";
+import { MobileNav } from "@/components/layout/mobile-nav";
 import { createClient } from "@/lib/supabase/server";
 
 /** Shared shell for all authenticated citizen-facing pages. */
@@ -28,6 +29,7 @@ export default async function AppLayout({ children }: { children: React.ReactNod
   return (
     <div className="flex min-h-svh">
       <Sidebar user={{ name, email: user.email ?? "" }} isAdmin={admin} />
+      <MobileNav variant="app" isAdmin={admin} user={{ name, email: user.email ?? "" }} />
       <main className="flex min-w-0 flex-1 flex-col">{children}</main>
     </div>
   );

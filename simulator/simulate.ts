@@ -1,5 +1,5 @@
 /**
- * EcoBin · IoT device fleet simulator
+ * Wastelytix · IoT device fleet simulator
  * -----------------------------------
  * Mimics a fleet of ESP32 smart bins. Each "machine" drifts its fill level,
  * occasionally registers an AI-classified bottle deposit, empties when full
@@ -112,7 +112,7 @@ async function tick() {
 
 async function main() {
   console.log(
-    `▣ EcoBin simulator — ${fleet.length} machines → ${DRY ? "DRY RUN" : BASE_URL} every ${TICK_MS}ms\n`,
+    `▣ Wastelytix simulator — ${fleet.length} machines → ${DRY ? "DRY RUN" : BASE_URL} every ${TICK_MS}ms\n`,
   );
   await tick();
   if (ONCE) return;

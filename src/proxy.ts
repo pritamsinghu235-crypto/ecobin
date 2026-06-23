@@ -44,9 +44,13 @@ export async function proxy(request: NextRequest) {
     pathname.startsWith("/admin");
 
   if (isProtected && !user) {
+    // Preserve the full path + query so deep links survive login — e.g. a
+    // scanned bin QR (/deposit?machine=BIN-A09) keeps its pre-selection.
+    const target = pathname + request.nextUrl.search;
     const url = request.nextUrl.clone();
     url.pathname = "/login";
-    url.searchParams.set("next", pathname);
+    url.search = ""; // drop any inherited query before adding `next`
+    url.searchParams.set("next", target);
     return NextResponse.redirect(url);
   }
 

@@ -6,6 +6,8 @@ import {
   Gift,
   Map,
   Bell,
+  Cpu,
+  Users,
   type LucideIcon,
 } from "lucide-react";
 
@@ -20,4 +22,12 @@ export const userNav: NavItem[] = [
   { label: "Rewards", href: "/rewards", icon: Gift },
   { label: "Bin Map", href: "/map", icon: Map },
   { label: "Notifications", href: "/notifications", icon: Bell },
+];
+
+/** Admin-area navigation. */
+export const adminNav: NavItem[] = [
+  { label: "Overview", href: "/admin", icon: LayoutDashboard },
+  { label: "Machines", href: "/admin/machines", icon: Cpu },
+  { label: "Users", href: "/admin/users", icon: Users },
+  { label: "Rewards", href: "/admin/rewards", icon: Gift },
 ];

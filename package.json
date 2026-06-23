@@ -1,5 +1,5 @@
 {
-  "name": "ecobin",
+  "name": "wastelytix",
   "version": "0.1.0",
   "private": true,
   "scripts": {
@@ -7,7 +7,9 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
-    "sim": "node --env-file=.env.local --import tsx simulator/simulate.ts"
+    "sim": "node --env-file=.env.local --import tsx simulator/simulate.ts",
+    "test:e2e": "playwright test",
+    "test:e2e:ui": "playwright test --ui"
   },
   "dependencies": {
     "@react-three/drei": "^10.7.7",
@@ -19,6 +21,7 @@
     "maplibre-gl": "^5.24.0",
     "motion": "^12.40.0",
     "next": "16.2.9",
+    "qrcode.react": "^4.2.0",
     "react": "19.2.4",
     "react-dom": "19.2.4",
     "recharts": "^3.8.1",
@@ -26,6 +29,7 @@
     "three": "^0.184.0"
   },
   "devDependencies": {
+    "@playwright/test": "^1.61.0",
     "@tailwindcss/postcss": "^4",
     "@types/node": "^20",
     "@types/react": "^19",

@@ -1,4 +1,16 @@
-import { Award, Globe, Leaf, Lock, Medal, Recycle, Sprout, Trophy } from "lucide-react";
+import {
+  Award,
+  Gem,
+  Globe,
+  Leaf,
+  Lock,
+  Medal,
+  Recycle,
+  Sparkles,
+  Sprout,
+  Star,
+  Trophy,
+} from "lucide-react";
 import type { BadgeProgress } from "@/lib/types";
 import { cn } from "@/lib/utils";
 
@@ -10,6 +22,9 @@ const ICONS: Record<string, typeof Award> = {
   Leaf,
   Globe,
   Award,
+  Sparkles,
+  Star,
+  Gem,
 };
 
 export function Achievements({ badges }: { badges: BadgeProgress[] }) {

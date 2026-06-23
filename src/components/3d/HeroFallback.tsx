@@ -9,7 +9,7 @@ export function HeroFallback() {
       <svg
         viewBox="0 0 220 260"
         className="h-[78%] w-auto drop-shadow-[0_24px_60px_rgba(16,185,129,0.18)]"
-        aria-label="EcoBin smart recycling bin"
+        aria-label="Wastelytix smart recycling bin"
         role="img"
       >
         <defs>

@@ -9,7 +9,7 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
       </Link>
       {children}
       <p className="mt-8 text-xs text-ink-faint">
-        EcoBin · IoT Smart Waste Management — Showcase Prototype
+        Wastelytix · Turn Waste Into Value — Showcase Prototype
       </p>
     </div>
   );

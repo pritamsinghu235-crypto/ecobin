@@ -2,7 +2,7 @@ import type { StyleSpecification } from "maplibre-gl";
 
 /**
  * Dark raster basemap from CARTO (free, no API key, attribution required).
- * Matches the EcoBin futuristic theme without a paid tile provider.
+ * Matches the Wastelytix futuristic theme without a paid tile provider.
  */
 export const DARK_MAP_STYLE: StyleSpecification = {
   version: 8,

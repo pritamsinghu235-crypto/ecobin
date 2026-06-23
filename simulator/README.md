@@ -1,4 +1,4 @@
-# EcoBin IoT Simulator
+# Wastelytix IoT Simulator
 
 A standalone Node script that mimics a fleet of ESP32 smart bins so the whole
 platform shows live, moving data with **no hardware required**. When real

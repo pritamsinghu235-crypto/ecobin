@@ -57,7 +57,7 @@ export default function Home() {
 
           <StaggerItem>
             <p className="mt-6 max-w-xl text-pretty text-lg text-ink-muted">
-              EcoBin is a network of AI-powered smart collection machines. Deposit plastic
+              Wastelytix is a network of AI-powered smart collection machines. Deposit plastic
               bottles, earn coins, and watch your environmental impact grow — city-wide.
             </p>
           </StaggerItem>
@@ -92,7 +92,7 @@ export default function Home() {
       </section>
 
       <footer className="border-t border-line/60 py-6 text-center text-sm text-ink-faint">
-        EcoBin — IoT Smart Waste Management · Showcase Prototype
+        Wastelytix — Turn Waste Into Value · Showcase Prototype
       </footer>
     </div>
   );

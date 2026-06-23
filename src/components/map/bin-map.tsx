@@ -93,7 +93,7 @@ export const BinMap = forwardRef<BinMapHandle, {
       let marker = markersRef.current.get(m.id);
       if (!marker) {
         const el = document.createElement("div");
-        el.className = "ecobin-pin"; // pop-in animation, plays once
+        el.className = "wastelytix-pin"; // pop-in animation, plays once
         const machine = m; // capture stable id + coords for the click handler
         el.addEventListener("click", (e) => {
           e.stopPropagation();

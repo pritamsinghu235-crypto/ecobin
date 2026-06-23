@@ -1,7 +1,7 @@
 @import "tailwindcss";
 
 /* ============================================================
-   EcoBin Design System
+   Wastelytix Design System
    Apple-minimal · Smart-city · Futuristic AI/IoT dashboard
    Dark-first. Deep navy canvas, emerald + cyan accents, glass.
    ============================================================ */
@@ -214,7 +214,7 @@
     transform: translateY(0) scale(1);
   }
 }
-.ecobin-pin {
+.wastelytix-pin {
   animation: pin-pop 0.5s var(--ease-out-soft) both;
 }
 

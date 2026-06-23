@@ -1,4 +1,4 @@
-# ♻️ EcoBin — IoT Smart Waste Management
+# ♻️ Wastelytix — Turn Waste Into Value
 
 An AI-powered smart-bin platform. Citizens deposit plastic bottles into smart
 collection machines, earn coins, climb a city leaderboard, and track their

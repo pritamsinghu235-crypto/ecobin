@@ -4,6 +4,7 @@ import { useTransition } from "react";
 import { useRouter } from "next/navigation";
 import { Trash2 } from "lucide-react";
 import { setMachineStatus, deleteMachine } from "@/app/admin/actions";
+import { MachineQr } from "@/components/admin/machine-qr";
 import { STATUS_COLOR } from "@/lib/map-style";
 import type { Machine, MachineStatus } from "@/lib/types";
 
@@ -75,14 +76,17 @@ export function MachineRow({ machine }: { machine: Machine }) {
         </div>
       </td>
       <td className="px-5 py-3 text-right">
-        <button
-          onClick={remove}
-          disabled={pending}
-          aria-label="Delete machine"
-          className="text-ink-faint transition-colors hover:text-danger disabled:opacity-50"
-        >
-          <Trash2 className="size-4" />
-        </button>
+        <div className="flex items-center justify-end gap-3">
+          <MachineQr machine={machine} />
+          <button
+            onClick={remove}
+            disabled={pending}
+            aria-label="Delete machine"
+            className="text-ink-faint transition-colors hover:text-danger disabled:opacity-50"
+          >
+            <Trash2 className="size-4" />
+          </button>
+        </div>
       </td>
     </tr>
   );

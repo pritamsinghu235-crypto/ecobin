@@ -40,10 +40,12 @@ export function BinVisualization({ initial }: { initial: LiveMachine[] }) {
   const init = aggregate(initial);
   const dataRef = useRef<BinData>({ fill: init.fill, status: init.status });
   const [display, setDisplay] = useState<Agg>(init);
-  const [mode, setMode] = useState<"fallback" | "3d">("fallback");
+  // off = static SVG; lite = reduced 3D for mobile/touch; full = desktop 3D.
+  const [mode, setMode] = useState<"off" | "lite" | "full">("off");
   const [inView, setInView] = useState(true);
 
   // Capability gate (deferred a frame, off the effect's synchronous path).
+  // Mobile/touch now downgrades to the `lite` tier instead of dropping 3D.
   useEffect(() => {
     const raf = requestAnimationFrame(() => {
       const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -57,8 +59,9 @@ export function BinVisualization({ initial }: { initial: LiveMachine[] }) {
       } catch {
         webgl = false;
       }
-      const lowCores = (navigator.hardwareConcurrency ?? 8) <= 2;
-      if (!reduce && !smallOrTouch && webgl && !lowCores) setMode("3d");
+      const cores = navigator.hardwareConcurrency ?? 8;
+      if (reduce || !webgl || cores <= 2) setMode("off");
+      else setMode(smallOrTouch ? "lite" : "full");
     });
     return () => cancelAnimationFrame(raf);
   }, []);
@@ -108,7 +111,11 @@ export function BinVisualization({ initial }: { initial: LiveMachine[] }) {
       </div>
 
       <div className="relative -mx-2 min-h-0 flex-1">
-        {mode === "3d" ? <LazyBinCanvas dataRef={dataRef} inView={inView} /> : <HeroFallback />}
+        {mode === "off" ? (
+          <HeroFallback />
+        ) : (
+          <LazyBinCanvas dataRef={dataRef} inView={inView} quality={mode} />
+        )}
       </div>
 
       <div className="grid grid-cols-3 gap-2 text-center">

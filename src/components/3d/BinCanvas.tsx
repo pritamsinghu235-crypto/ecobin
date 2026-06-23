@@ -24,7 +24,7 @@ function fillHex(fill: number) {
  * status halo toward it. Nothing here is React state, so data updates never
  * trigger a re-render — the scene mutates Three objects directly.
  */
-function Scene({ dataRef }: { dataRef: RefObject<BinData> }) {
+function Scene({ dataRef, lite = false }: { dataRef: RefObject<BinData>; lite?: boolean }) {
   const fill = useRef<Mesh>(null);
   const halo = useRef<Mesh>(null);
 
@@ -50,11 +50,11 @@ function Scene({ dataRef }: { dataRef: RefObject<BinData> }) {
 
   return (
     <>
-      <SmartBinModel />
+      <SmartBinModel lite={lite} />
 
       {/* status halo behind the bin */}
       <mesh ref={halo} position={[0, 0, -1.2]}>
-        <torusGeometry args={[1.5, 0.04, 16, 48]} />
+        <torusGeometry args={[1.5, 0.04, lite ? 8 : 16, lite ? 24 : 48]} />
         <meshStandardMaterial color="#34d399" emissive="#34d399" emissiveIntensity={1.4} toneMapped={false} />
       </mesh>
 
@@ -73,20 +73,31 @@ function Scene({ dataRef }: { dataRef: RefObject<BinData> }) {
   );
 }
 
-function BinCanvas({ dataRef, inView }: { dataRef: RefObject<BinData>; inView: boolean }) {
+function BinCanvas({
+  dataRef,
+  inView,
+  quality = "full",
+}: {
+  dataRef: RefObject<BinData>;
+  inView: boolean;
+  quality?: "full" | "lite";
+}) {
+  const lite = quality === "lite";
   return (
     <Canvas
       frameloop={inView ? "always" : "never"}
-      dpr={[1, 1.5]}
+      // Capped DPR + no antialias on mobile — keeps fill/rate at 60fps on phones.
+      dpr={lite ? [1, 1.5] : [1, 2]}
       camera={{ position: [0.7, 0.3, 6.8], fov: 42 }}
-      gl={{ antialias: true, alpha: true, powerPreference: "high-performance" }}
-      style={{ background: "transparent" }}
+      gl={{ antialias: !lite, alpha: true, powerPreference: "high-performance" }}
+      // pan-y preserves vertical page scroll over the card; horizontal drag rotates.
+      style={{ background: "transparent", touchAction: "pan-y" }}
     >
       <ambientLight intensity={0.55} />
       <directionalLight position={[5, 6, 4]} intensity={1.5} color="#eafff5" />
       <pointLight position={[-4, -1, 3]} intensity={2} decay={0} color="#10b981" />
       <pointLight position={[4, 3, -3]} intensity={1.4} decay={0} color="#22d3ee" />
-      <Scene dataRef={dataRef} />
+      <Scene dataRef={dataRef} lite={lite} />
     </Canvas>
   );
 }

@@ -1,5 +1,6 @@
 import { redirect } from "next/navigation";
 import { AdminSidebar } from "@/components/admin/admin-sidebar";
+import { MobileNav } from "@/components/layout/mobile-nav";
 import { isAdmin } from "@/lib/data";
 
 /** Role-gated shell. The proxy ensures auth; this enforces the admin role. */
@@ -9,6 +10,7 @@ export default async function AdminLayout({ children }: { children: React.ReactN
   return (
     <div className="flex min-h-svh">
       <AdminSidebar />
+      <MobileNav variant="admin" />
       <main className="flex min-w-0 flex-1 flex-col">{children}</main>
     </div>
   );

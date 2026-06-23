@@ -2,15 +2,9 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { LayoutDashboard, Cpu, Users, Gift, ArrowLeft, ShieldCheck } from "lucide-react";
+import { ArrowLeft, ShieldCheck } from "lucide-react";
+import { adminNav } from "@/lib/nav";
 import { cn } from "@/lib/utils";
-
-const adminNav = [
-  { label: "Overview", href: "/admin", icon: LayoutDashboard },
-  { label: "Machines", href: "/admin/machines", icon: Cpu },
-  { label: "Users", href: "/admin/users", icon: Users },
-  { label: "Rewards", href: "/admin/rewards", icon: Gift },
-];
 
 export function AdminSidebar() {
   const pathname = usePathname();
